@@ -5,7 +5,7 @@ Format: [version] · Date · Author · Summary
 
 ---
 
-## [v210.0] — 2025-Q3 — Current
+## [v1.0.0] — 2025-Q3 — Current
 
 ### Added
 - QA Agent: `multi-tenant-seeder.md` — factory functions for tenant test isolation

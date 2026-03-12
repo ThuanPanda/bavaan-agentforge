@@ -1,5 +1,5 @@
 # Hướng Dẫn Triển Khai — Team Architect
-## AgentForge v210.0 · System Design / Multi-Tenant / API Contracts
+## AgentForge v1.0.0 · System Design / Multi-Tenant / API Contracts
 
 ---
 

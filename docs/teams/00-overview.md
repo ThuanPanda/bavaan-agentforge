@@ -52,7 +52,7 @@ Tuần 7-8: QA + FULL LOOP
   ✓ QA Agent: Playwright E2E trên mọi PR
   ✓ Full pipeline: email → Epic → Story → Code → PR → Playwright → Merge
   ✓ KPI review: đo lường và điều chỉnh skill files
-  ✓ Version bump: v210.0 → v2.2.0
+  ✓ Version bump: v1.0.0 → v2.2.0
 ```
 
 ---

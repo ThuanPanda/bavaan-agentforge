@@ -1,5 +1,5 @@
 # Hướng Dẫn Triển Khai — Team Frontend
-## AgentForge v210.0 · Next.js 14 / Figma / Tailwind
+## AgentForge v1.0.0 · Next.js 14 / Figma / Tailwind
 
 ---
 
@@ -20,7 +20,7 @@
 ### Bước 1: Claude Desktop + Skills
 ```
 Settings → Skills → Upload
-File: ai-skills/v210.0/frontend/bavaan-frontend-skills.zip
+File: ai-skills/v1.0.0/frontend/bavaan-frontend-skills.zip
 Toggle ON: bavaan-frontend-agent
 ```
 

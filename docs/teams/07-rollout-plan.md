@@ -187,7 +187,7 @@ Email/Teams → PM Agent → Epic + Stories on Monday
 Agenda:
   15 phút: Trình bày metrics vs targets
   20 phút: Skill files nào cần cải thiện?
-  15 phút: Version bump ceremony: v210.0 → v2.2.0
+  15 phút: Version bump ceremony: v1.0.0 → v2.2.0
   10 phút: Roadmap: v2.2.0 improvements
 ```
 
@@ -234,4 +234,4 @@ Cuối sprint:
 
 ---
 
-*AgentForge Rollout Plan v210.0 · Bavaan Engineering*
+*AgentForge Rollout Plan v1.0.0 · Bavaan Engineering*

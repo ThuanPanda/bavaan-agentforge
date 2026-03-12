@@ -1,5 +1,5 @@
 # 🤖 AgentForge — AI-First Multi-Agent Framework
-### bavaan-agentforge · v210.0 · Powered by Claude (Anthropic)
+### bavaan-agentforge · v1.0.0 · Powered by Claude (Anthropic)
 
 ---
 
@@ -30,7 +30,7 @@ bavaan-agentforge/
 ├── ARCHITECTURE.md              ← Kiến trúc tổng thể
 ├── CHANGELOG.md                 ← Version history
 │
-├── ai-skills/v210.0/            ← Versioned Prompt Registry
+├── ai-skills/v1.0.0/            ← Versioned Prompt Registry
 │   ├── _orchestrator/           ← Command layer (claude-opus-4)
 │   ├── pm/                      ← PM Agent skills
 │   ├── architect/               ← Architect Agent skills
@@ -55,7 +55,7 @@ git clone https://github.com/bavaan/bavaan-agentforge.git
 
 # 2. Upload skills lên Claude.ai
 #    Settings > Capabilities > Skills > Upload
-cd ai-skills/v210.0 && zip -r bavaan-skills.zip .
+cd ai-skills/v1.0.0 && zip -r bavaan-skills.zip .
 
 # 3. Setup MCP
 bash scripts/mcp-setup.sh
@@ -82,4 +82,4 @@ bash scripts/husky-setup.sh
 | [docs/teams/07-rollout-plan.md](./docs/teams/07-rollout-plan.md) | Kế hoạch rollout 8 tuần |
 
 ---
-*Bavaan Engineering · v210.0*
+*Bavaan Engineering · v1.0.0*

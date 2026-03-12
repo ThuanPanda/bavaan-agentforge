@@ -6,7 +6,7 @@ set -e
 
 echo "═══════════════════════════════════════════"
 echo "  AgentForge — MCP Setup"
-echo "  bavaan-agentforge v210.0"
+echo "  bavaan-agentforge v1.0.0"
 echo "═══════════════════════════════════════════"
 
 # Check Node.js

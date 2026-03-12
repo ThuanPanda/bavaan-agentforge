@@ -1,6 +1,6 @@
 # Kiến Trúc Tổng Thể — AgentForge
 ## Intent-Routed MCP Architecture + CRITICS Versioned Prompt Registry
-### v210.0 · Bavaan Engineering
+### v1.0.0 · Bavaan Engineering
 
 ---
 
@@ -310,4 +310,4 @@ Architect Agent reviews every PR diff:
 
 ---
 
-*AgentForge Architecture v210.0 · Bavaan Engineering*
+*AgentForge Architecture v1.0.0 · Bavaan Engineering*
