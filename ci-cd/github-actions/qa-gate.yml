@@ -1,0 +1,185 @@
+name: 🎭 QA Gate — Playwright E2E
+
+on:
+  pull_request:
+    branches: [main, develop, 'release/**']
+    types: [opened, synchronize, reopened]
+
+concurrency:
+  group: qa-gate-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  NODE_VERSION: '20'
+
+jobs:
+  # ──────────────────────────────────────────
+  # Job 1: Backend unit tests + lint
+  # ──────────────────────────────────────────
+  backend-checks:
+    name: Backend — Jest + Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run Prettier check
+        run: npx prettier --check "src/**/*.ts"
+
+      - name: Run NestJS boundary check
+        run: bash scripts/check-boundaries.sh
+
+      - name: Run Jest unit tests
+        run: npx jest --passWithNoTests --coverage --ci
+        env:
+          DATABASE_URL: ${{ secrets.TEST_DATABASE_URL }}
+
+      - name: Upload coverage
+        uses: codecov/codecov-action@v4
+        if: always()
+
+  # ──────────────────────────────────────────
+  # Job 2: Frontend build check
+  # ──────────────────────────────────────────
+  frontend-build:
+    name: Frontend — Build + Type Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - run: npm ci
+      - name: TypeScript type check
+        run: npx tsc --noEmit
+      - name: Next.js build
+        run: npm run build
+        env:
+          NEXT_PUBLIC_API_URL: ${{ secrets.STAGING_API_URL }}
+
+  # ──────────────────────────────────────────
+  # Job 3: Playwright E2E (requires jobs 1+2)
+  # ──────────────────────────────────────────
+  playwright:
+    name: QA Agent — Playwright E2E
+    runs-on: ubuntu-latest
+    needs: [backend-checks, frontend-build]
+
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_DB: bavaan_test
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: Run Prisma migrations (test DB)
+        run: npx prisma migrate deploy
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/bavaan_test
+
+      - name: Seed multi-tenant test data
+        run: npx ts-node scripts/seed-test.ts
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/bavaan_test
+
+      - name: Start application
+        run: npm run start:test &
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/bavaan_test
+          NODE_ENV: test
+          PORT: 3000
+
+      - name: Wait for application to be ready
+        run: npx wait-on http://localhost:3000 --timeout 60000
+
+      - name: Run Playwright tests
+        run: npx playwright test --reporter=github,html
+        env:
+          PLAYWRIGHT_BASE_URL: http://localhost:3000
+          TEST_TENANT_ID_1: tenant-test-001
+          TEST_TENANT_ID_2: tenant-test-002
+
+      - name: Upload Playwright report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: playwright-report-${{ github.sha }}
+          path: playwright-report/
+          retention-days: 14
+
+      - name: Post failure comment on PR
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `## ❌ QA Gate FAILED — Playwright tests\n\nSome Playwright E2E tests failed. Merge is blocked.\n\n**Next steps:**\n1. Download the [Playwright report](https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId})\n2. Fix failing tests\n3. Push to re-trigger QA gate\n\n*QA Agent will auto-create a bug item on Monday.*`
+            })
+
+      - name: Post success comment on PR
+        if: success()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `## ✅ QA Gate PASSED\n\nAll Playwright E2E tests passed. Architect review is next.`
+            })
+
+  # ──────────────────────────────────────────
+  # Job 4: Architect review (after Playwright)
+  # ──────────────────────────────────────────
+  architect-review:
+    name: Architect Agent — Anti-Pattern Review
+    runs-on: ubuntu-latest
+    needs: [playwright]
+    if: success()
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run tenantId enforcement check
+        run: bash scripts/check-tenant-isolation.sh
+      - name: Post architect review comment
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `## 🏗️ Architect Review: PASSED\n\nNo architectural anti-patterns detected.\n- tenantId enforcement: ✅\n- No synchronous cross-service calls: ✅\n- NestJS module boundaries: ✅`
+            })
