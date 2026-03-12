@@ -1,5 +1,5 @@
 # Hướng Dẫn Triển Khai — Team DevOps
-## AgentForge v2.1.0 · GitHub Actions / Playwright Gate / IaC
+## AgentForge v210.0 · GitHub Actions / Playwright Gate / IaC
 
 ---
 

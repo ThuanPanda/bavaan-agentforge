@@ -1,5 +1,5 @@
 # Hướng Dẫn Triển Khai — Team Backend
-## AgentForge v2.1.0 · NestJS / Prisma / Multi-Tenant
+## AgentForge v210.0 · NestJS / Prisma / Multi-Tenant
 
 ---
 
@@ -20,7 +20,7 @@
 ### Bước 1: Cài Claude Desktop + Upload skills
 ```
 Settings → Capabilities → Skills
-Upload: ai-skills/v2.1.0/backend/bavaan-backend-skills.zip
+Upload: ai-skills/v210.0/backend/bavaan-backend-skills.zip
 Toggle ON: bavaan-backend-agent
 ```
 
@@ -157,4 +157,4 @@ Include standard checklist."
 
 ---
 
-*Cần hỗ trợ: #backend trên Teams · Xem [multi-tenant-patterns.md](../../ai-skills/v2.1.0/_shared/references/multi-tenant-patterns.md)*
+*Cần hỗ trợ: #backend trên Teams · Xem [multi-tenant-patterns.md](../../ai-skills/v210.0/_shared/references/multi-tenant-patterns.md)*
