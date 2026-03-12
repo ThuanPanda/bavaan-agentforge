@@ -1,5 +1,5 @@
 # 🤖 AgentForge — AI-First Multi-Agent Framework
-### bavaan-agentforge · v1.0.0 · Powered by Claude (Anthropic)
+### bavaan-agentforge · v1.0.0 · Powered by Jack Nguyen
 
 ---
 
